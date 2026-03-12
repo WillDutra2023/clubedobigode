@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card } from '../../styles/ServiceCard.styles';
 import { Servico } from '../../types/Servico';
+import SafeImage from '../common/SafeImage';
 
 type Props = {
   servico: Servico;
@@ -11,9 +12,11 @@ export default function ServiceCard({ servico, onDelete }: Props) {
   return (
     <Card>
       <Link href={`/servicos/${servico.slug}`}>
-        <img src={servico.imagem} alt={servico.titulo} />
-        <h2>{servico.titulo}</h2>
-        <p>{servico.descricao}</p>
+        <div>
+          <SafeImage src={servico?.imagem} alt={servico?.titulo || 'Serviço'} />
+          <h2>{servico.titulo}</h2>
+          <p>{servico.descricao}</p>
+        </div>
       </Link>
       <div className="actions">
         <Link href={`/servicos/${servico.slug}/editar`}>

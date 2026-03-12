@@ -1,25 +1,16 @@
 import Link from 'next/link';
-import {
-  Container,
-  Image,
-  Title,
-  Description,
-  BackLink,
-} from '../../styles/ServiceDetail.styles';
+import { Container, Title, Description, BackLink } from '../../styles/ServiceDetail.styles';
 import { Servico } from '../../types/Servico';
+import SafeImage from '../common/SafeImage';
 
 type Props = {
   servico: Servico;
 };
 
 export default function ServiceDetail({ servico }: Props) {
-  if (!servico) {
-    return <p>Carregando...</p>;
-  }
-
   return (
     <Container>
-      <Image src={servico.imagem} alt={servico.titulo} />
+      <SafeImage src={servico?.imagem} alt={servico?.titulo || 'Serviço'} />
       <Title>{servico.titulo}</Title>
       <Description>{servico.descricao}</Description>
       <Link href="/">

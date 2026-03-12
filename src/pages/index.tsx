@@ -1,94 +1,66 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import ServiceCard from '../components/Home/ServiceCard';
+import { useState, useEffect } from 'react';
 import ServiceForm from '../components/Home/ServiceForm';
+import ServiceCard from '../components/Home/ServiceCard';
+import { Container, Grid } from '../styles/Home.styles';
 import { Servico } from '../types/Servico';
-
-const Container = styled.div`
-  padding: 2rem;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-`;
 
 export default function Home() {
   const [servicos, setServicos] = useState<Servico[]>([]);
+  const [slug, setSlug] = useState('');
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [slug, setSlug] = useState('');
+  const [imagem, setImagem] = useState('');
 
-  // Carregar serviços do LocalStorage ou API
+  // Carregar serviços do LocalStorage
   useEffect(() => {
-    const data = localStorage.getItem('servicos');
-    if (data) {
-      setServicos(JSON.parse(data));
-    } else {
-      fetch('/api/servicos')
-        .then((res) => res.json())
-        .then((data) => {
-          setServicos(data);
-          localStorage.setItem('servicos', JSON.stringify(data));
-        });
+    const saved = localStorage.getItem('servicos');
+    if (saved) {
+      setServicos(JSON.parse(saved));
     }
   }, []);
 
-  // Persistir no LocalStorage sempre que mudar
-  useEffect(() => {
-    localStorage.setItem('servicos', JSON.stringify(servicos));
-  }, [servicos]);
-
   // Criar novo serviço
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const novoServico = { slug, titulo, descricao, imagem: '/images/default.jpg' };
+    const novoServico = { id: Date.now(), slug, titulo, descricao, imagem };
 
-    const res = await fetch('/api/servicos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(novoServico),
-    });
-    const data = await res.json();
-    setServicos([...servicos, data]);
+    const updated = [...servicos, novoServico];
+    setServicos(updated);
+    localStorage.setItem('servicos', JSON.stringify(updated));
 
+    setSlug('');
     setTitulo('');
     setDescricao('');
-    setSlug('');
+    setImagem('');
   };
 
   // Excluir serviço
-  const handleDelete = async (id: number) => {
-    await fetch(`/api/servicos/${id}`, { method: 'DELETE' });
-    setServicos(servicos.filter((s) => s.id !== id));
+  const handleDelete = (id: number) => {
+    const updated = servicos.filter((s) => s.id !== id);
+    setServicos(updated);
+    localStorage.setItem('servicos', JSON.stringify(updated));
   };
 
   return (
     <Container>
-      <h1>Clube do Bigode ✂️🧔</h1>
-      <p>Confira nossos serviços exclusivos para você!</p>
+      <h1>Serviços</h1>
 
-      {/* Formulário apenas para criar novos serviços */}
       <ServiceForm
         slug={slug}
         titulo={titulo}
         descricao={descricao}
-        editId={null} // não há edição na Home
+        imagem={imagem}
+        editId={null}
         setSlug={setSlug}
         setTitulo={setTitulo}
         setDescricao={setDescricao}
+        setImagem={setImagem}
         onSubmit={handleSubmit}
       />
 
-      {/* Listagem de serviços */}
       <Grid>
         {servicos.map((servico) => (
-          <ServiceCard
-            key={servico.id}
-            servico={servico}
-            onDelete={handleDelete}
-          />
+          <ServiceCard key={servico.id} servico={servico} onDelete={handleDelete} />
         ))}
       </Grid>
     </Container>

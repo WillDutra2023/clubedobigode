@@ -1,30 +1,36 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import ServiceDetail from '../../components/Servicos/ServiceDetail';
 import { Servico } from '../../types/Servico';
 
-const servicos: Servico[] = [
-  { id: 1, slug: 'corte-de-cabelo', titulo: 'Corte de Cabelo', descricao: 'Corte clássico e moderno.', imagem: '/images/corte.jpg' },
-  { id: 2, slug: 'barba', titulo: 'Barba', descricao: 'Aparar e modelar a barba.', imagem: '/images/barba.jpg' },
-  { id: 3, slug: 'sobrancelha', titulo: 'Sobrancelha', descricao: 'Design masculino de sobrancelha.', imagem: '/images/sobrancelha.jpg' },
-  { id: 4, slug: 'pigmentacao', titulo: 'Pigmentação Capilar', descricao: 'Tratamento estético para realçar fios.', imagem: '/images/pigmentacao.jpg' },
-  { id: 5, slug: 'hidratacao', titulo: 'Hidratação', descricao: 'Cuidado especial para cabelo e barba.', imagem: '/images/hidratacao.jpg' },
-];
+export default function ServicoPage() {
+  const router = useRouter();
+  const { slug } = router.query;
 
-export default function ServicoPage({ servico }: { servico: Servico }) {
+  const [servico, setServico] = useState<Servico | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (slug) {
+      const saved = localStorage.getItem('servicos');
+      if (saved) {
+        const lista = JSON.parse(saved);
+        const encontrado = lista.find((s: Servico) => s.slug === slug);
+        if (encontrado) {
+          setServico(encontrado);
+        }
+      }
+      setLoading(false);
+    }
+  }, [slug]);
+
+  if (loading) {
+    return <p>Carregando serviço...</p>;
+  }
+
+  if (!servico) {
+    return <p>Serviço não encontrado.</p>;
+  }
+
   return <ServiceDetail servico={servico} />;
 }
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: servicos.map((s) => ({ params: { slug: s.slug } })),
-    fallback: 'blocking',
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const servico = servicos.find((s) => s.slug === params?.slug);
-  return {
-    props: { servico: servico || null },
-    revalidate: 60, // ISR
-  };
-};
