@@ -32,7 +32,7 @@ export default function ServiceForm({
       <Input
         value={slug}
         onChange={(e) => setSlug(e.target.value)}
-        disabled={!!editId} // slug não deve ser alterado na edição
+        disabled={!!editId}
       />
 
       <Label>Título</Label>

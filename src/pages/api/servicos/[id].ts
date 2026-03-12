@@ -11,18 +11,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (req.method === 'GET') {
-    // Retorna serviço específico
     return res.status(200).json(servico);
   }
 
   if (req.method === 'PUT') {
-    // Atualiza serviço e salva no LocalStorage
     const atualizado = updateServico(servicoId, req.body);
     return res.status(200).json(atualizado);
   }
 
   if (req.method === 'DELETE') {
-    // Remove serviço e atualiza LocalStorage
     deleteServico(servicoId);
     return res.status(200).json({ message: 'Serviço removido com sucesso' });
   }

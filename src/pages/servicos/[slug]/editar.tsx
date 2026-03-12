@@ -13,7 +13,6 @@ export default function EditarServico() {
   const [imagem, setImagem] = useState('');
   const [editId, setEditId] = useState<number | null>(null);
 
-  // Carregar dados do LocalStorage
   useEffect(() => {
     if (slug) {
       const saved = localStorage.getItem('servicos');
@@ -30,7 +29,6 @@ export default function EditarServico() {
     }
   }, [slug]);
 
-  // Atualizar serviço
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const saved = localStorage.getItem('servicos');
@@ -46,10 +44,18 @@ export default function EditarServico() {
 
   return (
     <div style={{ padding: '2rem' }}>
-        {/* Botão para voltar */}
       <div style={{ marginTop: '2rem' }}>
         <Link href="/">
-          <button style={{ padding: '0.8rem 1.2rem', borderRadius: '6px', background: '#0070f3', color: '#fff', border: 'none', cursor: 'pointer' }}>
+          <button
+            style={{
+              padding: '0.8rem 1.2rem',
+              borderRadius: '6px',
+              background: '#0070f3',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
             Voltar para Home
           </button>
         </Link>
@@ -61,7 +67,7 @@ export default function EditarServico() {
         descricao={descricao}
         imagem={imagem}
         editId={editId}
-        setSlug={() => {}} // slug não deve ser alterado na edição
+        setSlug={() => {}}
         setTitulo={setTitulo}
         setDescricao={setDescricao}
         setImagem={setImagem}

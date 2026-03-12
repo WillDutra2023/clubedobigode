@@ -6,7 +6,8 @@ export type Servico = {
   imagem: string;
 };
 
-// Função auxiliar para carregar do LocalStorage
+let servicos: Servico[] = loadFromLocalStorage();
+
 function loadFromLocalStorage(): Servico[] {
   if (typeof window !== 'undefined') {
     const data = localStorage.getItem('servicos');
@@ -19,17 +20,12 @@ function loadFromLocalStorage(): Servico[] {
   ];
 }
 
-// Cache inicial
-let servicos: Servico[] = loadFromLocalStorage();
-
-// Função auxiliar para salvar no LocalStorage
 function saveToLocalStorage() {
   if (typeof window !== 'undefined') {
     localStorage.setItem('servicos', JSON.stringify(servicos));
   }
 }
 
-// CRUD
 export function getServicos() {
   return servicos;
 }

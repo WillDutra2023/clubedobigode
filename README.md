@@ -18,6 +18,7 @@ O sistema simula uma barbearia fictícia com CRUD de serviços, perfil de usuár
 
 ## 📂 Estrutura do Projeto
 
+```
 clube-do-bigode/
 ├── public/
 │   └── images/ (imagens dos serviços)
@@ -36,7 +37,7 @@ clube-do-bigode/
 ├── README.md
 ├── .eslintrc.json
 ├── .prettierrc
-
+```
 
 ---
 

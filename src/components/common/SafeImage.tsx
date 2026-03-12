@@ -6,15 +6,25 @@ type Props = {
   fallback?: string;
 };
 
-export default function SafeImage({ src, alt, fallback = '/images/broken.png' }: Props) {
-  const [imgSrc, setImgSrc] = useState(src || '/images/default.jpg');
+export default function SafeImage({
+  src,
+  alt,
+  fallback = '/images/broken.png',
+}: Props) {
+  const [imgSrc, setImgSrc] = useState(src && src.trim() !== '' ? src : fallback);
 
   return (
     <img
       src={imgSrc}
       alt={alt}
       onError={() => setImgSrc(fallback)}
-      style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1.5rem' }}
+      style={{
+        width: '100%',
+        height: '300px',
+        objectFit: 'cover',
+        borderRadius: '8px',
+        marginBottom: '1.5rem',
+      }}
     />
   );
 }

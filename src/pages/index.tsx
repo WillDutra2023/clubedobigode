@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ServiceForm from '../components/Home/ServiceForm';
 import ServiceCard from '../components/Home/ServiceCard';
+import ProfileIcon from '../components/Home/ProfileIcon';
 import { Container, Grid } from '../styles/Home.styles';
 import { Servico } from '../types/Servico';
 
@@ -11,7 +12,6 @@ export default function Home() {
   const [descricao, setDescricao] = useState('');
   const [imagem, setImagem] = useState('');
 
-  // Carregar serviços do LocalStorage
   useEffect(() => {
     const saved = localStorage.getItem('servicos');
     if (saved) {
@@ -19,9 +19,14 @@ export default function Home() {
     }
   }, []);
 
-  // Criar novo serviço
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!slug || !titulo || !descricao || !imagem) {
+      alert('Slug, Título, descrição e imagem são obrigatórios!');
+      return;
+    }
+
     const novoServico = { id: Date.now(), slug, titulo, descricao, imagem };
 
     const updated = [...servicos, novoServico];
@@ -34,7 +39,6 @@ export default function Home() {
     setImagem('');
   };
 
-  // Excluir serviço
   const handleDelete = (id: number) => {
     const updated = servicos.filter((s) => s.id !== id);
     setServicos(updated);
@@ -43,6 +47,7 @@ export default function Home() {
 
   return (
     <Container>
+      <ProfileIcon />
       <h1>Serviços</h1>
 
       <ServiceForm
@@ -60,7 +65,11 @@ export default function Home() {
 
       <Grid>
         {servicos.map((servico) => (
-          <ServiceCard key={servico.id} servico={servico} onDelete={handleDelete} />
+          <ServiceCard
+            key={servico.id}
+            servico={servico}
+            onDelete={handleDelete}
+          />
         ))}
       </Grid>
     </Container>
